@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- INHERITED FORM -->
+
+        <!-- add meal type menu to event-->
+        <record id="view_event_added_meal" model="ir.ui.view">
+            <field name="name">event_participation.view.meal_type</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@string='Event Details']" position="after">
+                    <page string="Meal Types" groups="base.group_no_one">
+                            <field name="meal_types" context="{'default_event_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="cost"/>
+                                </tree>
+                            </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
