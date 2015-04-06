@@ -7,10 +7,15 @@ import logging
 import models
 
 class EventParticipant(http.Controller):
-    @http.route('/event_participant/information/', type='http', auth='public', website=True)
+    @http.route('/event_participation/information/', type='http', auth='public', website=True)
     def get_information(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        return request.website.render("event_participation.all_the_info", [])
+
+        values = {}
+        values["meals"] = {"normal": {"cost": 0.00}, "vegan": {"cost", 20.00}, "diet": {"cost": 10.50}}
+        values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
+
+        return request.website.render("event_participation.all_the_info", values)
 
 
 class ExtendedSaleController(main.website_sale):
