@@ -18,21 +18,26 @@ class Participant(models.Model):
 
 
 class MealType(models.Model):
-    """
-        Model that contains information about a meal type.
-        A meal type is assigned to every participant.
-    """
     _name = 'event_participation.meal_type'
 
     name = fields.Char(string="Name", required=True)
     event_id = fields.Many2one('event.event', string="Event")
     cost = fields.Float(string="Additional Cost")
 
+    def get(self):
+        return self
+
+    def get_all_meal_types(self):
+        return self.search([])
+
+    def get_meal_types_for_event(self, event_id):
+        return self.search("event_id", "=", event_id)
+
 
 class ParticipantType(models.Model):
     """
         Every participant is assigned a participant type.
     """
-    _name = 'event_participation.type'
+    _name = 'event_participation.participant_type'
 
     name = fields.Char(required=True)

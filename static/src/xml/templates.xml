@@ -1,0 +1,209 @@
+<openerp>
+    <data>
+        <!-- NEW SHIT -->
+
+        <template id="cart_extend" inherit_id="website_sale.cart">
+            <xpath expr="//ul[@class='wizard pull-right']/li[1]" position="after">
+                <li class="text-muted">Participation Information
+                    <span class="chevron"/>
+                </li>
+            </xpath>
+        </template>
+
+        <!--<template id="cart_fix_continue" inherit_id="website_sale.cart">
+            <xpath expr="//a[@class='btn btn-primary pull-right mb32']" position="replace">
+                <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/event_participation/information"><span class="hidden-xs">Process Checkout</span><span class="visible-xs-inline">Checkout</span> <span class="fa fa-long-arrow-right"/></a>
+            </xpath>
+        </template>
+
+        <template id="fix_continue_shopping" inherit_id="website_sale.continue_shopping">
+            <xpath expr="//xpath" position="replace">
+                <xpath expr="//a[@href='/event_participation/information']" position="before">
+                    <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
+                </xpath>
+            </xpath>
+        </template>-->
+
+        <template id="all_the_info" name="Participation Information">
+            <t t-call="website.layout">
+
+                <link rel="stylesheet" href="/event_participation/static/src/css/base.css"/>
+                <script type="text/javascript" src="/event_participation/static/src/js/track_selection.js"></script>
+
+                <div id="wrap">
+                    <div class="container oe_website_sale">
+                        <ul class="wizard pull-right">
+                            <li>
+                                <a href="/shop/cart" class="text-success">Review Order
+                                    <span class="chevron"></span>
+                                </a>
+                            </li>
+                            <li class="text-primary">Participation Information
+                                <span class="chevron"></span>
+                            </li>
+                            <li class="text-muted">Shipping &amp; Billing
+                                <span class="chevron"></span>
+                            </li>
+                            <li class="text-muted">Payment
+                                <span class="chevron"></span>
+                            </li>
+                            <li class="text-muted">Confirmation
+                                <span class="chevron"></span>
+                            </li>
+                        </ul>
+
+                        <h1 class="mb32">Participation Information</h1>
+                        <div class="row">
+                            <div class="col-md-8 col-sm-9">
+                                <form action="/shop/checkout" method="post">
+                                    <h3 class="page-header mt16">Meal Selection</h3>
+                                    <div class="col-lg-12 form-group">
+                                        <label class="control-label" for="meals">Available Meal Types:</label>
+                                        <select class="form-control">
+                                            <option></option>
+                                            <t t-foreach="meals" t-as="meal">
+                                                <option>
+                                                    <t t-esc="meal"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="space-15"></div>
+                                    <h3 class="page-header mt16">Symposia, Workshops and Tutorials</h3>
+                                    <p>Please select the tracks you want to attend. Choose one Full Day, or one Morning and/or one Afternoon session.</p>
+                                    <p>All sessions will be held MONDAY unless otherwise noted.
+                                        Room location TBA in the conference program.
+                                        Your choice now is not binding, but we appreciate an indication of serious intention, so that we may plan effectively.</p>
+                                    <div class="col-lg-6 track-head">
+                                        <h3>Morning</h3>
+                                        <p>9:00AM - 12:00PM</p>
+                                    </div>
+                                    <div class="col-lg-6 track-head">
+                                        <h3>Afternoon</h3>
+                                        <p>1:00PM - 4:00PM</p>
+                                    </div>
+                                    <div class="col-lg-12 form-group">
+                                        <t t-foreach="tracks" t-as="track">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <t t-esc="track['name']"/>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="track['minitracks']" t-as="minitrack">
+                                                        <tr>
+                                                            <td class="track-selectable" onClick="selectTrack(this)">
+                                                                <t t-esc="minitrack"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </t>
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="track-selectable selected" onClick="selectTrack(this)">I am
+                                                        undecided.
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <input type="hidden" name="has_participation_information" value="True"/>
+                                    <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm
+                                        <span class="fa fa-long-arrow-right"/>
+                                    </a>
+                                </form>
+                            </div>
+                            <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
+                                <h3 class="page-header mt16">Your Order <small><a href="/shop/cart"><span class="fa fa-arrow-right"/> change</a></small></h3>
+                                <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
+                                <div class="row">
+                                    <div class="col-sm-6 text-right">Subtotal: </div>
+                                    <div class="col-sm-6"><span style="white-space: nowrap;" t-field="website_sale_order.amount_untaxed" t-field-options='{
+                                        "widget": "monetary",
+                                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                        }'/>
+                                    </div>
+                                    <div class="col-sm-6 text-right">Taxes: </div>
+                                    <div class="col-sm-6"><span style="white-space: nowrap;" t-field="website_sale_order.amount_tax" t-field-options='{
+                                        "widget": "monetary",
+                                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                        }'/>
+                                    </div>
+                                    <div class="col-sm-6 text-right"><h4>Total To Pay: </h4></div>
+                                    <div class="col-sm-6"><h4><span style="white-space: nowrap;" t-field="website_sale_order.amount_total" t-field-options='{
+                                        "widget": "monetary",
+                                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                        }'/></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+
+        </template>
+
+        <template id="partcipation_information" inherit_id="website_sale.checkout">
+
+            <xpath expr="//form[@action='/shop/confirm_order']/div/div/div[@class='row']" position="after">
+
+
+                <h3 class="page-header mt16" id="thisisdamn">Participation Information</h3>
+
+                <div class="row">
+
+                    <div class="col-lg-12 form-group">
+                        <label class="control-label" for="meals">Meals</label>
+                        <select class="form-control">
+                            <t t-foreach="meals" t-as="meal">
+                                <option>
+                                    <t t-esc="meal"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <!-- <div t-attf-class="form-group #{error.get('tracks') and 'has-error' or ''} col-lg-6">
+                        <label class="control-label" for="tracks">Tracks</label>
+                        <input type="text" name="tracks" class="form-control" t-att-value="tracks"/>
+                    </div>-->
+
+
+                </div>
+            </xpath>
+        </template>
+
+        <template id="checkout_extend" inherit_id="website_sale.checkout">
+            <xpath expr="//ul[@class='wizard pull-right']/li[1]" position="after">
+                <li>
+                    <a href="/event_participant/information/" class="text-success">Participation Information</a>
+                    <span class="chevron"/>
+                </li>
+            </xpath>
+        </template>
+
+        <template id="payment_extend" inherit_id="website_sale.payment">
+            <xpath expr="//ul[@class='wizard pull-right']/li[1]" position="after">
+                <li>
+                    <a href="/event_participant/information/" class="text-success">Participation Information</a>
+                    <span class="chevron"/>
+                </li>
+            </xpath>
+        </template>
+
+        <template id="confirmation_extend" inherit_id="website_sale.confirmation">
+            <xpath expr="//ul[@class='wizard pull-right']/li[1]" position="after">
+                <li class="text-muted">Participation Information
+                    <span class="chevron"/>
+                </li>
+            </xpath>
+        </template>
+    </data>
+</openerp>

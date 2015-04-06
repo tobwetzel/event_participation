@@ -1,0 +1,19 @@
+.track-selectable.selected {
+    color:darkturquoise;
+    border-radius: 10px 10px 10px 10px;
+    -moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border: 2px solid darkturquoise;
+}
+
+.track-selectable:hover {
+    cursor:pointer;
+}
+
+div.space-15 {
+    margin-top: 15%;
+}
+
+div.track-head{
+    text-align: center;
+}

@@ -2,3 +2,5 @@
 import controllers
 import models
 import CustomEvent
+
+from models import MealType, ParticipantType, Participant

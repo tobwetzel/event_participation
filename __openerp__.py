@@ -28,10 +28,10 @@
     'depends': ['base',
                 'event'],
 
-    # always loadedW
+    # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
-        'templates.xml',
+        'security/ir.model.access.csv',
+        'static/src/xml/templates.xml',
         'views.xml',
     ],
     # only loaded in demonstration mode
