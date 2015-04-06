@@ -45,10 +45,7 @@ class ExtendedSaleController(main.website_sale):
                     return super(ExtendedSaleController, self).checkout()
             else:
                 _logger.debug("has no participation info")
-                values = {}
-                values["meals"] = {"normal": {"cost": 0.00}, "vegan": {"cost", 20.00}, "diet": {"cost": 10.50}}
-                values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
-                return request.website.render("event_participation.all_the_info", values)
+                return request.redirect("/event_participation/information")
 
         else:
             return super(ExtendedSaleController, self).checkout()
