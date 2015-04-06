@@ -60,7 +60,7 @@
                                     <h3 class="page-header mt16">Meal Selection</h3>
                                     <p>You have the possibility to select a special type of meal adjusted to your needs.</p>
                                     <div class="col-lg-12 form-group">
-                                        <label class="control-label" for="meals">Available Meal Types:</label>
+                                        <label class="control-label" for="meals">Available Special Meal Types:</label>
                                         <select class="form-control" id="selector-meals" onchange="onSelectOption(this.value)">
                                             <option value="" selected="selected"></option>
                                             <t t-foreach="meals" t-as="meal">
@@ -68,7 +68,7 @@
                                                     <t t-esc="meal"/>
                                                 </option>
                                             </t>
-                                            <option value="other">other</option>
+                                            <option value="Other">Other</option>
                                         </select>
                                         <input type="hidden" class="form-control" name="meal_other" id="input-meal-other" value=""/>
                                     </div>
@@ -86,41 +86,40 @@
                                         <h3>Afternoon</h3>
                                         <p>1:00PM - 4:00PM</p>
                                     </div>
-                                    <div class="col-lg-12 form-group">
+                                    <div class="form-group">
                                         <t t-foreach="tracks" t-as="track">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-                                                            <t t-esc="track['name']"/>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
+                                            <label class="control-label"><t t-esc="track['name']"/></label>
+                                            <table class="table track-table table-bordered">
                                                 <tbody>
-                                                    <t t-foreach="track['minitracks']" t-as="minitrack">
+                                                    <t t-foreach="track['events_full_day']" t-as="event">
                                                         <tr>
-                                                            <td class="track-selectable" onClick="selectTrack(this)">
-                                                                <t t-esc="minitrack"/>
+                                                            <td colspan="2" class="track-selectable full_day" onClick="selectTrack(this)">
+                                                                <t t-esc="event['name']"/>
                                                             </td>
+                                                        </tr>
+                                                    </t>
+                                                    <t t-foreach="track['events_slots']" t-as="slot">
+                                                        <tr>
+                                                            <td class="track-selectable slots morning" onClick="selectTrack(this)"><t t-esc="slot['morning']"/></td>
+                                                            <td class="track-selectable slots afternoon" onClick="selectTrack(this)"><t t-esc="slot['afternoon']"/></td>
                                                         </tr>
                                                     </t>
                                                 </tbody>
                                             </table>
                                         </t>
-                                        <table class="table table-hover">
+                                        <table class="table track-table table-bordered">
                                             <tbody>
                                                 <tr>
-                                                    <td class="track-selectable selected" onClick="selectTrack(this)">I am
-                                                        undecided.
-                                                    </td>
+                                                    <td class="track-selectable selected full_day" onClick="selectTrack(this)">I am undecided.</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <input type="hidden" name="has_participation_information" value="True"/>
-                                    <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm
-                                        <span class="fa fa-long-arrow-right"/>
-                                    </a>
+                                    <div class="clearfix">
+                                        <a href="/shop/cart" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Return to Cart</a>
+                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm <span class="fa fa-long-arrow-right"/></a>
+                                    </div>
                                 </form>
                             </div>
                             <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
@@ -155,32 +154,9 @@
 
         </template>
 
-        <template id="partcipation_information" inherit_id="website_sale.checkout">
-
-            <xpath expr="//form[@action='/shop/confirm_order']/div/div/div[@class='row']" position="after">
-
-
-                <h3 class="page-header mt16" id="thisisdamn">Participation Information</h3>
-
-                <div class="row">
-
-                    <div class="col-lg-12 form-group">
-                        <label class="control-label" for="meals">Meals</label>
-                        <select class="form-control">
-                            <t t-foreach="meals" t-as="meal">
-                                <option>
-                                    <t t-esc="meal"/>
-                                </option>
-                            </t>
-                        </select>
-                    </div>
-                    <!-- <div t-attf-class="form-group #{error.get('tracks') and 'has-error' or ''} col-lg-6">
-                        <label class="control-label" for="tracks">Tracks</label>
-                        <input type="text" name="tracks" class="form-control" t-att-value="tracks"/>
-                    </div>-->
-
-
-                </div>
+        <template id="change_return_button" inherit_id="website_sale.checkout">
+            <xpath expr="//div[@class='clearfix']/a[@href='/shop/cart']" position="replace">
+                <a href="/event_participation/information/" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Back</a>
             </xpath>
         </template>
 
