@@ -6,7 +6,7 @@ function onSelectOption(value){
 
     var input = document.getElementById('input-meal-other');
 
-    if(value == "other"){
+    if(value == "Other"){
         //display input field when "other" is selected
         input.setAttribute('type','text');
     } else {
