@@ -12,12 +12,12 @@ class EventParticipant(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         values = {}
-        values["meals"] = {"Vegetarian": {"cost": 0.00}, "Vegan": {"cost", 20.00}, "Wheat/Gluten-free": {"cost": 10.50}}
+        values["meals"] = {"Vegetarian": {"cost": 10.00}, "Vegan": {"cost", 20.00}, "Wheat/Gluten-free": {"cost": 15.00}}
         #values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
 
         values["tracks"] =  [{"name": "Security",
 					"events_full_day": [{"name": "Rapid Screening Technologies, Deception, Detection and Credibility Assessment (2 days) (S) "}],
-					"events_slots":[{"morning": "Cybersecurity in Action (S)", "afternoon": "information security"}]},
+					"events_slots":[{"morning": "Cybersecurity in Action (S)", "afternoon": "An Adaptable Approach to Information Security Education (W)"}]},
 					{"name": "Big Data",
 					"events_full_day": [{"name": "Real-Time Big Data Analytics (W)"}],
 					"events_slots": [{"morning": "Introduction to Big Data and Its Technology (T)", "afternoon": "Big Data  Analytics (T)"},
@@ -48,36 +48,6 @@ class EventParticipant(http.Controller):
 
 
 class ExtendedSaleController(main.website_sale):
-
-    @http.route(['/shop/checkout'], type='http', auth="public", website=True)
-    def checkout(self, **post):
-
-        _logger = logging.getLogger(__name__)
-        _logger.debug("HELLO")
-        _logger.debug(post)
-
-        cr, uid, context = request.cr, request.uid, request.context
-
-        order = request.website.sale_get_order(force_create=1, context=context)
-
-        _logger.debug(order.product_id.event_ticket_ids.event_id)
-
-        if order.product_id.event_ticket_ids.event_id:
-            _logger.debug("is event ticket")
-
-            if post.has_key("has_participation_information"):
-
-                has_participation_info = post["has_participation_information"]
-
-                if has_participation_info:
-                    _logger.debug("has participation info")
-                    return super(ExtendedSaleController, self).checkout()
-            else:
-                _logger.debug("has no participation info")
-                return request.redirect("/event_participation/information")
-
-        else:
-            return super(ExtendedSaleController, self).checkout()
 
     def checkout_values(self, data=None):
 

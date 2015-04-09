@@ -10,13 +10,22 @@
             </xpath>
         </template>
 
-        <!--<template id="cart_fix_continue" inherit_id="website_sale.cart">
+        <template id="cart_fix_continue" inherit_id="website_sale.cart">
             <xpath expr="//a[@class='btn btn-primary pull-right mb32']" position="replace">
-                <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/event_participation/information"><span class="hidden-xs">Process Checkout</span><span class="visible-xs-inline">Checkout</span> <span class="fa fa-long-arrow-right"/></a>
+                <script type="text/javascript">
+                    function redirectToPartInfo (self) {
+                        console.log("onclick called");
+                        console.log(self);
+                        self.setAttribute("href","/event_participation/information");
+
+                        return true;
+                    }
+                </script>
+                <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/shop/checkout" onclick=" return redirectToPartInfo(this)"><span class="hidden-xs">Process Checkout</span><span class="visible-xs-inline">Checkout</span> <span class="fa fa-long-arrow-right"/></a>
             </xpath>
         </template>
 
-        <template id="fix_continue_shopping" inherit_id="website_sale.continue_shopping">
+        <!--<template id="fix_continue_shopping" inherit_id="website_sale.continue_shopping">
             <xpath expr="//xpath" position="replace">
                 <xpath expr="//a[@href='/event_participation/information']" position="before">
                     <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
@@ -30,6 +39,7 @@
                 <link rel="stylesheet" href="/event_participation/static/src/css/base.css"/>
                 <script type="text/javascript" src="/event_participation/static/src/js/meal_selection.js"></script>
                 <script type="text/javascript" src="/event_participation/static/src/js/track_selection.js"></script>
+                <script type="text/javascript" src="/event_participation/static/src/js/form_validation.js"></script>
 
                 <div id="wrap">
                     <div class="container oe_website_sale">
@@ -56,7 +66,7 @@
                         <h1 class="mb32">Participation Information</h1>
                         <div class="row">
                             <div class="col-md-8 col-sm-9">
-                                <form action="/shop/checkout" method="post">
+                                <form action="/shop/checkout" onsubmit="return validateForm()" method="post" id="submit-form">
                                     <h3 class="page-header mt16">Meal Selection</h3>
                                     <p>You have the possibility to select a special type of meal adjusted to your needs.</p>
                                     <div class="col-lg-12 form-group">
@@ -71,6 +81,7 @@
                                             <option value="Other">Other</option>
                                         </select>
                                         <input type="hidden" class="form-control" name="meal_other" id="input-meal-other" value=""/>
+                                        <input type="hidden" class="form-control" name="meal_type" id="input-meal-type" value=""/>
                                     </div>
                                     <div class="space-15"></div>
                                     <h3 class="page-header mt16">Symposia, Workshops and Tutorials</h3>
@@ -146,12 +157,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
+                                <h3 class="page-header mt16">More Info</h3>
+                                <div class="row">
+                                    <div class="col-sm-2 text-center">(W)</div><div class="col-sm-10"><a href="http://www.hicss.org/#!callforsymposium/c1t3s">Workshop</a></div>
+                                    <div class="col-sm-2 text-center">(S)</div><div class="col-sm-10"><a href="http://www.hicss.org/#!callforsymposium/c1t3s">Symposium</a></div>
+                                    <div class="col-sm-2 text-center">(T)</div><div class="col-sm-10"><a href="http://www.hicss.org/#!callforsymposium/c1t3s">Tutorial</a></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="oe_structure"/>
                 </div>
             </t>
-
         </template>
 
         <template id="change_return_button" inherit_id="website_sale.checkout">
