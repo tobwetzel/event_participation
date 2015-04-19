@@ -33,7 +33,7 @@ class EventParticipant(http.Controller):
             _logger.debug(track.name)
 
         values = {}
-        values["meals"] = {"Vegetarian": {"cost": 10.00}, "Vegan": {"cost", 20.00}, "Wheat/Gluten-free": {"cost": 15.00}}
+        #values["meals"] = {"Vegetarian": {"cost": 10.00}, "Vegan": {"cost", 20.00}, "Wheat/Gluten-free": {"cost": 15.00}}
         #values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
 
         values["tracks"] =  [{"name": "Security",

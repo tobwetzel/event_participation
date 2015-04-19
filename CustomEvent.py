@@ -9,4 +9,4 @@ class CustomEvent(models.Model):
     _inherit = "event.event"
 
     # add meal_types
-    meal_types = fields.One2many('event_participation.meal_type', 'event_id', string="Available Meals")
+    #meal_types = fields.One2many('event_participation.meal_type', 'event_id', string="Available Meals")

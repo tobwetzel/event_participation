@@ -67,7 +67,7 @@
                         <div class="row">
                             <div class="col-md-8 col-sm-9">
                                 <form action="/event_participation/submit" onsubmit="return validateForm()" method="post" id="submit-form">
-                                    <h3 class="page-header mt16">Meal Selection</h3>
+                                    <!--<h3 class="page-header mt16">Meal Selection</h3>
                                     <p>You have the possibility to select a special type of meal adjusted to your needs.</p>
                                     <div class="col-lg-12 form-group">
                                         <label class="control-label" for="meals">Available Special Meal Types:</label>
@@ -83,7 +83,7 @@
                                         <input type="hidden" class="form-control" name="meal_other" id="input-meal-other" value=""/>
                                         <input type="hidden" class="form-control" name="meal_type" id="input-meal-type" value=""/>
                                     </div>
-                                    <div class="space-15"></div>
+                                    <div class="space-15"></div>-->
                                     <h3 class="page-header mt16">Symposia, Workshops and Tutorials</h3>
                                     <p>Please select the tracks you want to attend. Choose one Full Day, or one Morning and/or one Afternoon session.</p>
                                     <p>All sessions will be held MONDAY unless otherwise noted.

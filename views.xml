@@ -4,7 +4,7 @@
         <!-- INHERITED FORM -->
 
         <!-- add meal type menu to event-->
-        <record id="view_event_added_meal" model="ir.ui.view">
+        <!--<record id="view_event_added_meal" model="ir.ui.view">
             <field name="name">event_participation.view.meal_type</field>
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
@@ -20,7 +20,7 @@
                     </page>
                 </xpath>
             </field>
-        </record>
+        </record>-->
 
 
     </data>

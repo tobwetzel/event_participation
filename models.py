@@ -17,21 +17,21 @@ class Participant(models.Model):
     meal = fields.Many2one('event_participation.meal_type', string="Chose to eat")
 
 
-class MealType(models.Model):
-    _name = 'event_participation.meal_type'
+#class MealType(models.Model):
+    #_name = 'event_participation.meal_type'
 
-    name = fields.Char(string="Name", required=True)
-    event_id = fields.Many2one('event.event', string="Event")
-    cost = fields.Float(string="Additional Cost")
+    #name = fields.Char(string="Name", required=True)
+    #event_id = fields.Many2one('event.event', string="Event")
+    #cost = fields.Float(string="Additional Cost")
 
-    def get(self):
-        return self
+    #def get(self):
+        #return self
 
-    def get_all_meal_types(self):
-        return self.search([])
+    #def get_all_meal_types(self):
+        #return self.search([])
 
-    def get_meal_types_for_event(self, event_id):
-        return self.search("event_id", "=", event_id)
+    #def get_meal_types_for_event(self, event_id):
+        #return self.search("event_id", "=", event_id)
 
 
 class ParticipantType(models.Model):
