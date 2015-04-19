@@ -111,8 +111,18 @@
                                                     </t>
                                                     <t t-foreach="track['events_slots']" t-as="slot">
                                                         <tr>
-                                                            <td class="track-selectable slots morning" onClick="selectTrack(this)"><t t-esc="slot['morning']"/></td>
-                                                            <td class="track-selectable slots afternoon" onClick="selectTrack(this)"><t t-esc="slot['afternoon']"/></td>
+                                                            <t t-if="slot['morning']">
+                                                                <td class="track-selectable slots morning" onClick="selectTrack(this)"><t t-esc="slot['morning']"/></td>
+                                                            </t>
+                                                            <t t-if="not slot['morning']">
+                                                                <td><t t-esc="slot['morning']"/></td>
+                                                            </t>
+                                                            <t t-if="slot['afternoon']">
+                                                                <td class="track-selectable slots afternoon" onClick="selectTrack(this)"><t t-esc="slot['afternoon']"/></td>
+                                                            </t>
+                                                            <t t-if="not slot['afternoon']">
+                                                                <td><t t-esc="slot['afternoon']"/></td>
+                                                            </t>
                                                         </tr>
                                                     </t>
                                                 </tbody>
