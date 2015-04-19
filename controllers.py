@@ -15,6 +15,23 @@ class EventParticipant(http.Controller):
     def get_information(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
+        order = request.website.sale_get_order(force_create=1, context=context)
+        _logger.debug(order.product_id.event_ticket_ids.name)
+        _logger.debug(order.product_id.event_ticket_ids.event_id.name)
+
+        #meals = order.product_id.event_ticket_ids.event_id.meal_types
+        #_logger.debug(meals)
+        #_logger.debug(meals.__class__.__name__)
+
+        #for meal in meals:
+        #    _logger.debug("printing meal")
+        #    _logger.debug(meal.name)
+
+        tracks = order.product_id.event_ticket_ids.event_id.track_ids
+
+        for track in tracks:
+            _logger.debug(track.name)
+
         values = {}
         values["meals"] = {"Vegetarian": {"cost": 10.00}, "Vegan": {"cost", 20.00}, "Wheat/Gluten-free": {"cost": 15.00}}
         #values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
