@@ -3,10 +3,14 @@ from openerp import http
 from openerp.http import request
 from openerp import SUPERUSER_ID
 from openerp.addons.website_sale.controllers import main
+from openerp.addons.website_event_sale.controllers.main import website_event
 import logging
 import models
 
+_logger = logging.getLogger(__name__)
+
 class EventParticipant(http.Controller):
+
     @http.route('/event_participation/information/', type='http', auth='public', website=True)
     def get_information(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -46,18 +50,53 @@ class EventParticipant(http.Controller):
 
         return request.website.render("event_participation.all_the_info", values)
 
-
-class ExtendedSaleController(main.website_sale):
-
-    def checkout_values(self, data=None):
+    @http.route('/event_participation/submit/', type='http', auth='public', website=True)
+    def store_information(self, **post):
 
         _logger = logging.getLogger(__name__)
 
-        if not data:
+        _logger.debug(post)
 
-            cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        self.env
 
-            values = super(ExtendedSaleController, self).checkout_values()
+        return request.redirect("/shop/checkout")
+
+
+class ExtendedWebsiteSaleController(website_event):
+
+    @http.route(['/event/cart/update'], type='http', auth="public", methods=['POST'], website=True)
+    def cart_update(self, event_id, **post):
+
+        super(ExtendedWebsiteSaleController, self).cart_update(event_id, **post)
+
+        sale = False
+        for key, value in post.items():
+            quantity = int(value or "0")
+            if not quantity:
+                continue
+            sale = True
+
+        if not sale:
+            return request.redirect("/event/%s" % event_id)
+        return request.redirect("/event_participation/information")
+
+
+#class ExtendedSaleController(main.website_sale):
+
+    #@http.route(['/shop/checkout'], type='http', auth="public", website=True)
+    #def checkout(self, **post):
+
+        #return super(ExtendedSaleController, self).checkout(post)
+
+    #def checkout_values(self, data=None):
+
+        #_logger = logging.getLogger(__name__)
+
+        #if not data:
+
+            #cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+
+            #values = super(ExtendedSaleController, self).checkout_values()
 
             #orm_meals = registry.get('event_participation.meal_type')
             #_logger.debug(orm_meals)
@@ -86,14 +125,14 @@ class ExtendedSaleController(main.website_sale):
 
             #values["meals"] = registry['event_participation.meal_type'].search([])
 
-            values["meals"] = {"normal": {"cost": 0.00}, "vegan": {"cost", 20.00}, "diet": {"cost": 10.50}}
-            values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
+            #values["meals"] = {"normal": {"cost": 0.00}, "vegan": {"cost", 20.00}, "diet": {"cost": 10.50}}
+            #values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
             #values["tracks"] = {"security": {"minitracks": ["cybersecurity", "information security", ]}, "social media": {}, "big data": {}, "innovation": {}, "research": {}}
 
-            return values
+            #return values
 
-        else:
-            return super(ExtendedSaleController, self).checkout_values()
+        #else:
+            #return super(ExtendedSaleController, self).checkout_values()
 
 #     @http.route('/event_participant/event_participant/objects/', auth='public')
 #     def list(self, **kw):

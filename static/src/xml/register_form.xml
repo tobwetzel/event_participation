@@ -1,0 +1,15 @@
+<openerp>
+    <data>
+        <template id="event_participation.event_register" inherit_id="website_event_sale.event_description_full">
+            <xpath expr="//select[@t-if='ticket.seats_available']" position="replace">
+                <!--<span t-if="ticket.seats_available" t-attf-name="ticket-#{ ticket.id }">
+                    <t>1</t>
+                </span>-->
+                <input type="hidden" t-attf-name="ticket-#{ ticket.id }" value="1"/>
+                <span>1</span>
+                <span t-if="not ticket.seats_available">Sold Out</span>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>
