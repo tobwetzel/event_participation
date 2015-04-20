@@ -14,7 +14,7 @@ class Participant(models.Model):
     event_id = fields.Many2one('event.event', string="Participating in", required=True)
     tracks = fields.Many2many('event.track', string="Attending")
     type = fields.Many2one('event_participation.type', string="Is of type", required=True)
-    meal = fields.Many2one('event_participation.meal_type', string="Chose to eat")
+    #meal = fields.Many2one('event_participation.meal_type', string="Chose to eat")
 
 
 #class MealType(models.Model):
