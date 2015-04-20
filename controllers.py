@@ -74,7 +74,7 @@ class EventParticipant(http.Controller):
 
         _logger.debug(post)
 
-        self.env
+        #self.env
 
         return request.redirect("/shop/checkout")
 
