@@ -1,4 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_event_participation_participant,access_event_participation_participant,model_event_participation_participant,,1,0,0,0
-access_event_participation_meal_type,access_vent_participation_meal_type,model_event_participation_meal_type,,1,0,0,0
 access_event_participation_participant_type,access_event_participation_participant_type,model_event_participation_participant_type,,1,0,0,0

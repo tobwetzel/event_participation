@@ -5,9 +5,12 @@ from openerp import SUPERUSER_ID
 from openerp.addons.website_sale.controllers import main
 from openerp.addons.website_event_sale.controllers.main import website_event
 import logging
+
+from datetime import datetime
 import models
 
 _logger = logging.getLogger(__name__)
+
 
 class EventParticipant(http.Controller):
 
@@ -16,8 +19,36 @@ class EventParticipant(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         order = request.website.sale_get_order(force_create=1, context=context)
-        _logger.debug(order.product_id.event_ticket_ids.name)
-        _logger.debug(order.product_id.event_ticket_ids.event_id.name)
+
+        values = {}
+        values["guests"] = []
+
+        _logger.debug(order.order_line)
+
+        for line in order.order_line:
+
+            if line.event_ticket_id.name == "Subscription":
+                values["tracks"] = []
+
+                tracks = line.event_id.track_ids
+
+                for track in tracks:
+                    date_object = datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')
+
+                    #topic = track.topic
+                    #look if topic in tracks, if not add
+
+                    if date_object.hour == "09":
+                        pass
+                        #values["tracks"]
+                        #add track
+
+            elif line.event_ticket_id.name == "Guest":
+
+                for x in range(1, int(line.product_uom_qty)+1):
+                    values["guests"].append(x)
+
+
 
         #meals = order.product_id.event_ticket_ids.event_id.meal_types
         #_logger.debug(meals)
@@ -27,16 +58,11 @@ class EventParticipant(http.Controller):
         #    _logger.debug("printing meal")
         #    _logger.debug(meal.name)
 
-        tracks = order.product_id.event_ticket_ids.event_id.track_ids
 
-        for track in tracks:
-            _logger.debug(track.name)
-
-        values = {}
         #values["meals"] = {"Vegetarian": {"cost": 10.00}, "Vegan": {"cost", 20.00}, "Wheat/Gluten-free": {"cost": 15.00}}
         #values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
 
-        values["tracks"] =  [{"name": "Security",
+        values["tracks"] = [{"name": "Security",
 					"events_full_day": [{"name": "Rapid Screening Technologies, Deception, Detection and Credibility Assessment (2 days) (S) "}],
 					"events_slots":[{"morning": "Cybersecurity in Action (S)", "afternoon": "An Adaptable Approach to Information Security Education (W)"}]},
 					{"name": "Big Data",
@@ -73,6 +99,8 @@ class EventParticipant(http.Controller):
         _logger = logging.getLogger(__name__)
 
         _logger.debug(post)
+
+        #request.registry['event']
 
         #self.env
 

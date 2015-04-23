@@ -2,6 +2,18 @@
 from openerp import models, fields, api
 
 
+class ExtendedRegistration(models.Model):
+    _inherit = "event.registration"
+
+    track_ids = fields.Many2many('event.track', string="Attending")
+
+
+class ExtendedTrack(models.Model):
+    _inherit = "event.track"
+
+    attendees = fields.Many2many('event.registration', string="Attending")
+
+
 class Participant(models.Model):
     """
         Model of a participant. Is linked to a partner and an event.

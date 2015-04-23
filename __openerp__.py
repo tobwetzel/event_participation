@@ -26,7 +26,8 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base',
-                'event'],
+                'event',
+                'website_event_track'],
 
     # always loaded
     'data': [

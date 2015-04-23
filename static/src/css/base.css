@@ -21,10 +21,14 @@ div.space-15 {
     margin-top: 15%;
 }
 
+div.space-10 {
+    margin-top: 10%;
+}
+
 div.track-head{
     text-align: center;
 }
 
-#input-meal-other {
+div.guest-information {
     margin-top: 2%;
 }

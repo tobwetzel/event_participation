@@ -84,6 +84,23 @@
                                         <input type="hidden" class="form-control" name="meal_type" id="input-meal-type" value=""/>
                                     </div>
                                     <div class="space-15"></div>-->
+                                    <div t-if="guests">
+                                        <h3 class="page-header mt16">Guest Information</h3>
+                                        <p>Please enter names and meal selections for all the quests you have registered.</p>
+                                        <div t-foreach="guests" t-as="guest" class="row">
+                                            <div class="col-md-8 guest-information">
+                                                <input type="text" t-attf-name="guest{{ guest }}-name" class="form-control"></input>
+                                            </div>
+                                            <div class="col-md-4 guest-information">
+                                                <select class="form-control" t-attf-name="guest{{ guest }}-meal">
+                                                    <option value="1">meal 1</option>
+                                                    <option value="2">meal 2</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="space-10"></div>
+                                    </div>
+
                                     <h3 class="page-header mt16">Symposia, Workshops and Tutorials</h3>
                                     <p>Please select the tracks you want to attend. Choose one Full Day, or one Morning and/or one Afternoon session.</p>
                                     <p>All sessions will be held MONDAY unless otherwise noted.

@@ -5,9 +5,18 @@
                 <!--<span t-if="ticket.seats_available" t-attf-name="ticket-#{ ticket.id }">
                     <t>1</t>
                 </span>-->
-                <input type="hidden" t-attf-name="ticket-#{ ticket.id }" value="1"/>
+                <!--<input type="hidden" t-attf-name="ticket-#{ ticket.id }" value="1"/>
                 <span>1</span>
+                <span t-if="not ticket.seats_available">Sold Out</span>-->
+
+                <select t-if="ticket.seats_available and not ticket.name == 'Subscription'" t-attf-name="ticket-#{ ticket.id }" class="form-control">
+                     <t t-foreach="range(0, ticket.seats_available > 9 and 10 or ticket.seats_available+1 )" t-as="nb"><option t-esc="nb"/></t>
+                </select>
+                <select t-if="ticket.seats_available and ticket.name == 'Subscription'" t-attf-name="ticket-#{ ticket.id }" class="form-control">
+                     <t t-foreach="[0, 1]" t-as="nb"><option t-esc="nb"/></t>
+                </select>
                 <span t-if="not ticket.seats_available">Sold Out</span>
+
             </xpath>
         </template>
 
