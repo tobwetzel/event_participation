@@ -14,13 +14,75 @@ _logger = logging.getLogger(__name__)
 
 class EventParticipant(http.Controller):
 
-    @http.route('/event_participation/information/', type='http', auth='public', website=True)
-    def get_information(self, **post):
-        cr, uid, context = request.cr, request.uid, request.context
+    @staticmethod
+    def append_track(tracks, new_track):
 
-        order = request.website.sale_get_order(force_create=1, context=context)
+        _logger.debug(new_track.date)
+        date_object = datetime.strptime(new_track.date, '%Y-%m-%d %H:%M:%S')
 
-        values = {}
+        _logger.debug(date_object.hour)
+        _logger.debug(new_track.duration)
+
+        for track in tracks:
+
+            if track["name"] == new_track.topic:
+                _logger.debug("found track topic")
+
+                added = False
+
+                if date_object.hour == 9 and new_track.duration == 3.0:
+                    _logger.debug("morning")
+                    for slot in track["events_slots"]:
+                        if slot["morning"] == "":
+                            _logger.debug("found empty slot - appending")
+                            #slot["morning"] = new_track.name
+                            slot["morning"] = {"name": new_track.name, "id": new_track.id}
+                            added = True
+                            break
+
+                    if not added:
+                        _logger.debug("no empty slot - creating")
+                        #track["events_slots"].append({"morning": new_track.name, "afternoon": ""}
+                        track["events_slots"].append({"morning": {"name": new_track.name, "id": new_track.id},
+                                                      "afternoon": ""})
+
+                elif date_object.hour == 13:
+                    _logger.debug("afternoon")
+                    for slot in track["events_slots"]:
+                        if slot["afternoon"] == "":
+                            _logger.debug("found empty slot - appending")
+                            #slot["afternoon"] = new_track.name
+                            slot["afternoon"] = {"name": new_track.name, "id": new_track.id}
+                            added = True
+                            break
+
+                    if not added:
+                        _logger.debug("found empty slot - creating")
+                        #track["events_slots"].append({"morning": "", "afternoon": new_track.name})
+                        track["events_slots"].append({"morning": "", "afternoon": {"name": new_track.name, "id": new_track.id}})
+
+                else:
+                    _logger.debug("full day")
+                    #track["events_full_day"].append({"name": new_track.name})
+                    track["events_full_day"].append({"name": new_track.name, "id": new_track.id})
+
+        _logger.debug(tracks)
+        return tracks
+
+    def validate_form(self, data):
+
+        errors = dict()
+
+        for field_key, field_val in data.items():
+            if field_val == "":
+                errors[field_key] = field_val
+
+        return errors
+
+    def get_participation_information(self, order):
+
+        values = dict()
+
         values["guests"] = []
 
         _logger.debug(order.order_line)
@@ -33,23 +95,75 @@ class EventParticipant(http.Controller):
                 tracks = line.event_id.track_ids
 
                 for track in tracks:
-                    date_object = datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')
 
-                    #topic = track.topic
-                    #look if topic in tracks, if not add
+                    if track.website_published:
+                        tags = track.tag_ids
+                        swt = False
+                        topic = ""
+                        _logger.debug("Found track: " + track.name)
 
-                    if date_object.hour == "09":
-                        pass
-                        #values["tracks"]
-                        #add track
+                        for tag in tags:
+                            if tag.name == "SWT":
+                                _logger.debug("is SWT")
+                                swt = True
+                            else:
+                                topic += tag.name
+
+                        track.topic = topic
+
+                        if swt:
+                            _logger.debug("append SWT with topic: " + track.topic)
+                            appended = False
+
+                            for swts in values["tracks"]:
+
+                                if swts["name"] == topic:
+                                    _logger.debug("found topic - appending")
+                                    values["tracks"] = self.append_track(values["tracks"], track)
+                                    appended = True
+                                    break
+
+                            if not appended:
+                                _logger.debug("topic not found - create and append")
+                                values["tracks"].append({"name": track.topic,
+                                                                 "events_full_day": [],
+                                                                 "events_slots": []
+                                                         })
+                                values["tracks"] = self.append_track(values["tracks"], track)
 
             elif line.event_ticket_id.name == "Guest":
 
                 for x in range(1, int(line.product_uom_qty)+1):
                     values["guests"].append(x)
 
+        return values
+
+    def save_guests(self, guests):
+
+        cr = request.cr
+        registry = request.registry
+        context = request.context
+
+        orm_partner = registry.get("res.partner")
+        orm_guest = registry.get("event_participation.event_guest")
+
+        for guest_name, guest_meal in guests.items():
+
+            partner_info = {"name": guest_name}
+            partner_id = orm_partner.create(cr, SUPERUSER_ID, partner_info, context=context)
+
+            guest_info = {"name": guest_name, "meal_id": guest_meal}
+            guest_id = orm_guest.create(cr, SUPERUSER_ID, guest_info, context=context)
 
 
+
+
+    @http.route('/event_participation/information/', type='http', auth='public', website=True)
+    def get_information(self, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        order = request.website.sale_get_order(force_create=1, context=context)
+        values = self.get_participation_information(order)
         #meals = order.product_id.event_ticket_ids.event_id.meal_types
         #_logger.debug(meals)
         #_logger.debug(meals.__class__.__name__)
@@ -62,6 +176,7 @@ class EventParticipant(http.Controller):
         #values["meals"] = {"Vegetarian": {"cost": 10.00}, "Vegan": {"cost", 20.00}, "Wheat/Gluten-free": {"cost": 15.00}}
         #values["tracks"] = [{"name": "security", "minitracks": [{"name": "cybersecurity", "date": "xyz", "duration": "5"}, "information security"]}, {"name": "social media", "minitracks": ["introduction", "blablabla"]}, {"name": "big data", "minitracks": ["analisys", "so cool"]}, {"name": "innovation", "minitracks": ["brand new"]}, {"name": "research", "minitracks": []}]
 
+        """
         values["tracks"] = [{"name": "Security",
 					"events_full_day": [{"name": "Rapid Screening Technologies, Deception, Detection and Credibility Assessment (2 days) (S) "}],
 					"events_slots":[{"morning": "Cybersecurity in Action (S)", "afternoon": "An Adaptable Approach to Information Security Education (W)"}]},
@@ -90,6 +205,32 @@ class EventParticipant(http.Controller):
                                     {"morning": "Academic Integrity Research: Can We Change the Culture? (W)", "afternoon": "Design Science in Action: Exemplars from Information Systems Privacy Artifacts in IS Research (S)"},
 									{"morning": "Writing Review and Meta-analysis Papers in Information Systems (W)", "afternoon": ""}]}
 					]
+        """
+        """
+
+        values["tracks"] = {"Security":{"events_full_day": [{"name": "Rapid Screening Technologies, Deception, Detection and Credibility Assessment (2 days) (S) "}],
+					"events_slots":[{"morning": "Cybersecurity in Action (S)", "afternoon": "An Adaptable Approach to Information Security Education (W)"}]},
+					"Big Data":{"events_full_day": [{"name": "Real-Time Big Data Analytics (W)"}],
+					"events_slots": [{"morning": "Introduction to Big Data and Its Technology (T)", "afternoon": "Big Data  Analytics (T)"},
+									{"morning": "Introduction to Text Mining in Virtual Team Research (T)", "afternoon": "Visual Mining and Analysis of Social Media (T)"},
+									{"morning": "", "afternoon": "Business Analytics and Big Data: Resources for Next Generation of Knowledge Workers (W)"}]},
+					"Social Media & Networks" : {"events_full_day": [{"name": "Social Media Research: Tools and Methods / Results from Analyses of Social Media Data; Continuing Challenges (W)"}],
+					"events_slots": [{"morning": "Introduction to Social Network Analysis (T)", "afternoon": "Collective Intelligence and Crowdsourcing (W)"},
+									{"morning": "Community Systems Design (T)", "afternoon": "Cross Cultural Communication in Accessible Global Virtual Teams (W)"}]},
+					"Innovation & Sustainability": {"events_full_day": [{"name": "Emerging Technical Frontiers for Service Innovation (S)"},
+                                        {"name": "Innovating Together: Co-creation and Co-production of Public Services (S)"},
+                                        {"name": "Sustainable Energy and Computing (S)"}],
+					"events_slots": [{"morning": "Information Technology and Innovation (S)", "afternoon": "Wireless Innovation and Services Beyond 2020 (W)"}]},
+					"E-Health": {"events_full_day": [{"name": "Learning Health Systems (1.5 days) (S)"}],
+					"events_slots": []},
+					"Teaching & Research Methods": {"events_full_day": [],
+					"events_slots":[{"morning": "Philosophy of Technology for Information Systems Scholars (T)", "afternoon": "Interaction Design for Specifying Business Requirements (T)"},
+                                    {"morning": "Cloud Computing and Decision Analytics (T)", "afternoon": "Teaching with Tableau (W)"},
+                                    {"morning": "Biomedical/Clinical Natural Language Processing (T)", "afternoon": "Get Your First Experience with Serious Games and Game Design Thinking"},
+                                    {"morning": "Academic Integrity Research: Can We Change the Culture? (W)", "afternoon": "Design Science in Action: Exemplars from Information Systems Privacy Artifacts in IS Research (S)"},
+									{"morning": "Writing Review and Meta-analysis Papers in Information Systems (W)", "afternoon": ""}]}
+                    }
+        """
 
         return request.website.render("event_participation.all_the_info", values)
 
@@ -99,6 +240,34 @@ class EventParticipant(http.Controller):
         _logger = logging.getLogger(__name__)
 
         _logger.debug(post)
+
+        values = {}
+        values["error"] = self.validate_form(post)
+
+        if values["error"]:
+            _logger.debug("there are errors")
+            #values.update(self.get_participation_information())
+
+            #return request.website.render("event_participation.all_the_info", values)
+
+        guests = {}
+
+        for entry_key in post.keys():
+            if "guest" in entry_key and "name" in entry_key:
+                guest_name = post[entry_key]
+                #search for meal-type
+
+                for entry_key2 in post.keys():
+                    if entry_key.split('-')[0] in entry_key2 and "meal" in entry_key2:
+                        guest_meal = post[entry_key2]
+                        guests[guest_name] = guest_meal
+                        break
+
+        self.save_guests(guests)
+
+        _logger.debug(guests)
+
+
 
         #request.registry['event']
 

@@ -121,7 +121,7 @@
                                                 <tbody>
                                                     <t t-foreach="track['events_full_day']" t-as="event">
                                                         <tr>
-                                                            <td colspan="2" class="track-selectable full_day" onClick="selectTrack(this)">
+                                                            <td colspan="2" class="track-selectable full_day" t-attf-id="{{ event['id'] }}" onClick="selectTrack(this)">
                                                                 <t t-esc="event['name']"/>
                                                             </td>
                                                         </tr>
@@ -129,13 +129,13 @@
                                                     <t t-foreach="track['events_slots']" t-as="slot">
                                                         <tr>
                                                             <t t-if="slot['morning']">
-                                                                <td class="track-selectable slots morning" onClick="selectTrack(this)"><t t-esc="slot['morning']"/></td>
+                                                                <td class="track-selectable slots morning" t-attf-id="{{ slot['morning']['id'] }}" onClick="selectTrack(this)"><t t-esc="slot['morning']['name']"/></td>
                                                             </t>
                                                             <t t-if="not slot['morning']">
                                                                 <td><t t-esc="slot['morning']"/></td>
                                                             </t>
                                                             <t t-if="slot['afternoon']">
-                                                                <td class="track-selectable slots afternoon" onClick="selectTrack(this)"><t t-esc="slot['afternoon']"/></td>
+                                                                <td class="track-selectable slots afternoon" t-attf-id="{{ slot['afternoon']['id'] }}" onClick="selectTrack(this)"><t t-esc="slot['afternoon']['name']"/></td>
                                                             </t>
                                                             <t t-if="not slot['afternoon']">
                                                                 <td><t t-esc="slot['afternoon']"/></td>
@@ -148,7 +148,7 @@
                                         <table class="table track-table table-bordered">
                                             <tbody>
                                                 <tr>
-                                                    <td class="track-selectable selected full_day" onClick="selectTrack(this)">I am undecided.</td>
+                                                    <td class="track-selectable selected full_day" id="track-undecided" onClick="selectTrack(this)">I am undecided.</td>
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -6,12 +6,22 @@ class ExtendedRegistration(models.Model):
     _inherit = "event.registration"
 
     track_ids = fields.Many2many('event.track', string="Attending")
+    guest_ids = fields.One2many('event_participation.event_guest', 'id', string="Guests")
 
 
 class ExtendedTrack(models.Model):
     _inherit = "event.track"
 
     attendees = fields.Many2many('event.registration', string="Attending")
+    topic = fields.Char(string="Topic")
+
+
+class EventGuest(models.Model):
+    _name = 'event_participation.event_guest'
+
+    name = fields.Char(string="Name", required=True)
+    meal_id = fields.One2many('event_participation.meal_type', 'id', string='Selected Meal', required=True)
+    registration_id = fields.Many2one('event.registration', string='Registered With', required=True)
 
 
 class Participant(models.Model):
@@ -29,8 +39,8 @@ class Participant(models.Model):
     #meal = fields.Many2one('event_participation.meal_type', string="Chose to eat")
 
 
-#class MealType(models.Model):
-    #_name = 'event_participation.meal_type'
+class MealType(models.Model):
+    _name = 'event_participation.meal_type'
 
     #name = fields.Char(string="Name", required=True)
     #event_id = fields.Many2one('event.event', string="Event")

@@ -22,6 +22,31 @@
             </field>
         </record>-->
 
-
+        <record id="view_registration_show_guests" model="ir.ui.view">
+            <field name="name">event_participation.registration_show_guests</field>
+            <field name="inherit_id" ref="event.view_event_registration_form"/>
+            <field name="model">event.registration</field>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Guests" groups="base.group_no_one">
+                            <field name="guest_ids" context="{'registration_id': active_id}">
+                                <tree string="Guests">
+                                    <field name="name"/>
+                                    <field name="meal"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Tracks" groups="base.group_no_one">
+                            <field name="track_ids" context="{'registration_id': active_id}">
+                                <tree string="Tracks">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

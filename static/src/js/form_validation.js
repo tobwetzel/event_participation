@@ -14,7 +14,8 @@ function validateForm(){
     var tracks = [];
 
     for (var i = 0; i < selectedElements.length; i++){
-        tracks.push(selectedElements[i].firstChild.nodeValue);
+        //tracks.push(selectedElements[i].firstChild.nodeValue);
+        tracks.push(selectedElements[i].id);
     }
 
     input_tracks.setAttribute("value", tracks.toString());
