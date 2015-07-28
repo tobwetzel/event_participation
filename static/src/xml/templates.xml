@@ -2,7 +2,7 @@
     <data>
         <!-- NEW SHIT -->
 
-        <template id="cart_extend" inherit_id="website_sale.cart">
+        <template id="cart_extend" inherit_id="website_sale.wizard_checkout">
             <xpath expr="//ul[@class='wizard pull-right']/li[1]" position="after">
                 <li class="text-muted">Participation Information
                     <span class="chevron"/>
@@ -43,25 +43,9 @@
 
                 <div id="wrap">
                     <div class="container oe_website_sale">
-                        <ul class="wizard pull-right">
-                            <li>
-                                <a href="/shop/cart" class="text-success">Review Order
-                                    <span class="chevron"></span>
-                                </a>
-                            </li>
-                            <li class="text-primary">Participation Information
-                                <span class="chevron"></span>
-                            </li>
-                            <li class="text-muted">Shipping &amp; Billing
-                                <span class="chevron"></span>
-                            </li>
-                            <li class="text-muted">Payment
-                                <span class="chevron"></span>
-                            </li>
-                            <li class="text-muted">Confirmation
-                                <span class="chevron"></span>
-                            </li>
-                        </ul>
+                        <t t-call="website_sale.wizard_checkout">
+                          <t t-set="step" t-value="20"/>
+                        </t>
 
                         <h1 class="mb32">Participation Information</h1>
                         <div class="row">
@@ -114,7 +98,7 @@
                                         <h3>Afternoon</h3>
                                         <p>1:00PM - 4:00PM</p>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" style="float:left">
                                         <t t-foreach="tracks" t-as="track">
                                             <label class="control-label"><t t-esc="track['name']"/></label>
                                             <table class="table track-table table-bordered">
@@ -205,7 +189,7 @@
             </xpath>
         </template>
 
-        <template id="checkout_extend" inherit_id="website_sale.checkout">
+        <!--<template id="checkout_extend" inherit_id="website_sale.checkout">
             <xpath expr="//ul[@class='wizard pull-right']/li[1]" position="after">
                 <li>
                     <a href="/event_participation/information/" class="text-success">Participation Information</a>
@@ -229,6 +213,6 @@
                     <span class="chevron"/>
                 </li>
             </xpath>
-        </template>
+        </template>-->
     </data>
 </openerp>

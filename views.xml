@@ -33,7 +33,7 @@
                             <field name="guest_ids" context="{'registration_id': active_id}">
                                 <tree string="Guests">
                                     <field name="name"/>
-                                    <field name="meal"/>
+                                    <field name="meal_id"/>
                                 </tree>
                             </field>
                         </page>

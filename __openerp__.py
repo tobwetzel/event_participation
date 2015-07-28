@@ -33,7 +33,6 @@
     'data': [
         'security/ir.model.access.csv',
         'static/src/xml/templates.xml',
-        'static/src/xml/register_form.xml',
         'views.xml',
     ],
     # only loaded in demonstration mode
